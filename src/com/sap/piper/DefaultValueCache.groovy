@@ -54,7 +54,7 @@ class DefaultValueCache implements Serializable {
             // The "customDefault" parameter is used for storing which extra defaults need to be
             // passed to piper-go. The library resource 'default_pipeline_environment.yml' shall
             // be excluded, since the go steps have their own in-built defaults in their yaml files.
-            createInstance(defaultValues, customDefaults + defaultsFromFiles)
+            createInstance(defaultValues, customDefaults + defaultsFiles)
         }
     }
 
