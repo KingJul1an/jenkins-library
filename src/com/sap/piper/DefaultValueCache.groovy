@@ -42,9 +42,9 @@ class DefaultValueCache implements Serializable {
         if (!getInstance() || parameters.customDefaults || parameters.customDefaultsFromFiles) {
             List customDefaultFiles = []
 
-            if (steps.fileExists('.pipeline/defaults.yaml')) {
-                customDefaultFiles = ['defaults.yaml']
-            }
+//             if (steps.fileExists('.pipeline/defaults.yaml')) {
+//                 customDefaultFiles = ['defaults.yaml']
+//             }
 
             customDefaultFiles = Utils.appendParameterToStringList(customDefaultFiles, parameters, 'customDefaults')
             customDefaultFiles = Utils.appendParameterToStringList(customDefaultFiles, parameters, 'customDefaultsFromFiles')
