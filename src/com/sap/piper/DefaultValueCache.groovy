@@ -40,16 +40,16 @@ class DefaultValueCache implements Serializable {
     static void prepare(Script steps, Map parameters = [:]) {
         if (parameters == null) parameters = [:]
         if (!getInstance() || parameters.customDefaults || parameters.customDefaultsFromFiles) {
-            List defaultsFromResources = ['default_pipeline_environment.yml']
-            List customDefaults = Utils.appendParameterToStringList(
-                [], parameters, 'customDefaults')
-            defaultsFromResources.addAll(customDefaults)
-            List defaultsFromFiles = Utils.appendParameterToStringList(
-                [], parameters, 'customDefaultsFromFiles')
+            List defaultsFiles = ['default_pipeline_environment.yml']
 
-            Map defaultValues = [:]
-            defaultValues = addDefaultsFromLibraryResources(steps, defaultValues, defaultsFromResources)
-            defaultValues = addDefaultsFromFiles(steps, defaultValues, defaultsFromFiles)
+            if (steps.fileExists('.pipeline/defaults.yaml')) {
+                defaultsFiles.add('defaults.yaml')
+            }
+
+            defaultsFiles = Utils.appendParameterToStringList(defaultsFiles, parameters, 'customDefaults')
+            defaultsFiles = Utils.appendParameterToStringList(defaultsFiles, parameters, 'customDefaultsFromFiles')
+
+            Map defaultValues = addDefaultsFromFiles(steps, [], defaultsFiles)
 
             // The "customDefault" parameter is used for storing which extra defaults need to be
             // passed to piper-go. The library resource 'default_pipeline_environment.yml' shall
