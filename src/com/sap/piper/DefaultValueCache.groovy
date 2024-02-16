@@ -40,21 +40,24 @@ class DefaultValueCache implements Serializable {
     static void prepare(Script steps, Map parameters = [:]) {
         if (parameters == null) parameters = [:]
         if (!getInstance() || parameters.customDefaults || parameters.customDefaultsFromFiles) {
-            List defaultsFiles = ['default_pipeline_environment.yml']
+            List customDefaultFiles = []
 
             if (steps.fileExists('.pipeline/defaults.yaml')) {
-                defaultsFiles.add('defaults.yaml')
+                customDefaultFiles = ['defaults.yaml']
             }
 
-            defaultsFiles = Utils.appendParameterToStringList(defaultsFiles, parameters, 'customDefaults')
-            defaultsFiles = Utils.appendParameterToStringList(defaultsFiles, parameters, 'customDefaultsFromFiles')
+            customDefaultFiles = Utils.appendParameterToStringList(customDefaultFiles, parameters, 'customDefaults')
+            customDefaultFiles = Utils.appendParameterToStringList(customDefaultFiles, parameters, 'customDefaultsFromFiles')
 
-            Map defaultValues = addDefaultsFromFiles(steps, [:], defaultsFiles)
+            Map defaultValues = [:]
+            defaultValues = addDefaultsFromFiles(steps, defaultValues, ['default_pipeline_environment.yml'])
+            defaultValues = addDefaultsFromFiles(steps, defaultValues, customDefaultFiles)
 
             // The "customDefault" parameter is used for storing which extra defaults need to be
             // passed to piper-go. The library resource 'default_pipeline_environment.yml' shall
             // be excluded, since the go steps have their own in-built defaults in their yaml files.
-            createInstance(defaultValues, defaultsFiles)
+            createInstance(defaultValues, customDefaultFiles)
+            steps.echo "DEBUG333 (OS): ${defaultValues}"
         }
     }
 
