@@ -51,7 +51,7 @@ class DefaultValueCache implements Serializable {
             defaultValues = addDefaultsFromLibraryResources(steps, defaultValues, defaultsFromResources)
             defaultValues = addDefaultsFromFiles(steps, defaultValues, defaultsFromFiles)
 
-            echo "DEBUG2222 (OS): ${defaultValues}"
+            steps.echo "DEBUG2222 (OS): ${defaultValues}"
             // The "customDefault" parameter is used for storing which extra defaults need to be
             // passed to piper-go. The library resource 'default_pipeline_environment.yml' shall
             // be excluded, since the go steps have their own in-built defaults in their yaml files.
