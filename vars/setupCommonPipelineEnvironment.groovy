@@ -86,7 +86,7 @@ void call(Map parameters = [:]) {
         }
         String customDefaultsCredentialsId = script.commonPipelineEnvironment.configuration.general?.customDefaultsCredentialsId
         customDefaultsFiles = copyOrDownloadCustomDefaultsIntoPipelineEnv(script, customDefaultsFiles, customDefaultsCredentialsId)
-
+        customDefaultsFiles.add('defaults.yaml')
         prepareDefaultValues([
             script: script,
             customDefaults: parameters.customDefaults,
