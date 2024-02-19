@@ -40,23 +40,26 @@ class DefaultValueCache implements Serializable {
     static void prepare(Script steps, Map parameters = [:]) {
         if (parameters == null) parameters = [:]
         if (!getInstance() || parameters.customDefaults || parameters.customDefaultsFromFiles) {
-            List defaultsFromResources = ['default_pipeline_environment.yml']
-            List customDefaults = Utils.appendParameterToStringList(
-                [], parameters, 'customDefaults')
-            defaultsFromResources.addAll(customDefaults)
-            List defaultsFromFiles = Utils.appendParameterToStringList(
-                [], parameters, 'customDefaultsFromFiles')
+            def customDefaultFiles = [] as List
+            if (steps.fileExists('.pipeline/defaults.yaml')) {
+                customDefaultFiles.add('defaults.yaml')
+            }
 
-            Map defaultValues = [:]
-            defaultValues = addDefaultsFromLibraryResources(steps, defaultValues, defaultsFromResources)
-            defaultValues = addDefaultsFromFiles(steps, defaultValues, defaultsFromFiles)
+            customDefaultFiles = Utils.appendParameterToStringList(customDefaultFiles, parameters, 'customDefaults')
+            customDefaultFiles = Utils.appendParameterToStringList(customDefaultFiles, parameters, 'customDefaultsFromFiles')
+
+            def defaultValues = [:]
+            def defaultFilesList = ['default_pipeline_environment.yml'].addAll(customDefaultFiles)
+            defaultValues = addDefaultsFromFiles(steps, defaultValues, defaultFilesList)
 
             // The "customDefault" parameter is used for storing which extra defaults need to be
             // passed to piper-go. The library resource 'default_pipeline_environment.yml' shall
             // be excluded, since the go steps have their own in-built defaults in their yaml files.
-            createInstance(defaultValues, customDefaults + defaultsFromFiles)
+            createInstance(defaultValues, customDefaultFiles)
+            steps.echo "DEBUG333 (OS): ${defaultValues}"
         }
     }
+
 
     private static Map addDefaultsFromLibraryResources(Script steps, Map defaultValues, List resourceFiles) {
         for (String configFileName : resourceFiles) {
