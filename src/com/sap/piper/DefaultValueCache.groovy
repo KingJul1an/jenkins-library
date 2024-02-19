@@ -51,7 +51,7 @@ class DefaultValueCache implements Serializable {
             Map defaultValues = [:]
             List defaultFilesList = ['default_pipeline_environment.yml']
             defaultFilesList.addAll(customDefaultFiles)
-            defaultValues = addDefaultsFromFiles(steps, defaultValues, defaultFilesList)
+//             defaultValues = addDefaultsFromFiles(steps, defaultValues, defaultFilesList)
 
             // The "customDefault" parameter is used for storing which extra defaults need to be
             // passed to piper-go. The library resource 'default_pipeline_environment.yml' shall
