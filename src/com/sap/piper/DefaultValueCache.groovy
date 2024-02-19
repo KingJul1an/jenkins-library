@@ -49,7 +49,7 @@ class DefaultValueCache implements Serializable {
 
             Map defaultValues = [:]
             defaultValues = addDefaultsFromLibraryResources(steps, defaultValues, ['default_pipeline_environment.yml'])
-            defaultValues = addDefaultsFromFiles(steps, defaultValues, ['defaults.yaml'])
+//             defaultValues = addDefaultsFromFiles(steps, defaultValues, ['defaults.yaml'])
             defaultValues = addDefaultsFromLibraryResources(steps, defaultValues, customDefaults)
             defaultValues = addDefaultsFromFiles(steps, defaultValues, defaultsFromFiles)
 
