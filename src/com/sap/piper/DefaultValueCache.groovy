@@ -40,23 +40,21 @@ class DefaultValueCache implements Serializable {
     static void prepare(Script steps, Map parameters = [:]) {
         if (parameters == null) parameters = [:]
         if (!getInstance() || parameters.customDefaults || parameters.customDefaultsFromFiles) {
-            List customDefaultFiles = []
-            if (fileExists('.pipeline/defaults.yaml')) {
-                customDefaultFiles.add('defaults.yaml')
-            }
-
-            customDefaultFiles = Utils.appendParameterToStringList(customDefaultFiles, parameters, 'customDefaults')
-            customDefaultFiles = Utils.appendParameterToStringList(customDefaultFiles, parameters, 'customDefaultsFromFiles')
+            List defaultsFromResources = ['default_pipeline_environment.yml']
+            List customDefaults = Utils.appendParameterToStringList(
+                [], parameters, 'customDefaults')
+            defaultsFromResources.addAll(customDefaults)
+            List defaultsFromFiles = Utils.appendParameterToStringList(
+                [], parameters, 'customDefaultsFromFiles')
 
             Map defaultValues = [:]
-            List defaultFilesList = ['default_pipeline_environment.yml']
-            defaultFilesList.addAll(customDefaultFiles)
-            defaultValues = addDefaultsFromFiles(steps, defaultValues, defaultFilesList)
+            defaultValues = addDefaultsFromLibraryResources(steps, defaultValues, defaultsFromResources)
+            defaultValues = addDefaultsFromFiles(steps, defaultValues, defaultsFromFiles)
 
             // The "customDefault" parameter is used for storing which extra defaults need to be
             // passed to piper-go. The library resource 'default_pipeline_environment.yml' shall
             // be excluded, since the go steps have their own in-built defaults in their yaml files.
-            createInstance(defaultValues, customDefaultFiles)
+            createInstance(defaultValues, customDefaults + defaultsFromFiles)
         }
     }
 
@@ -75,7 +73,7 @@ class DefaultValueCache implements Serializable {
         for (String configFileName : configFiles) {
             steps.echo "Loading configuration file '${configFileName}'"
             try {
-                Map configuration = readYaml file: ".pipeline/$configFileName"
+                Map configuration = steps.readYaml file: ".pipeline/$configFileName"
                 defaultValues = mergeIntoDefaults(defaultValues, configuration)
             } catch (Exception e) {
                 steps.error "Failed to parse custom defaults as YAML file. " +
