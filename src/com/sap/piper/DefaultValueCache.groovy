@@ -41,7 +41,7 @@ class DefaultValueCache implements Serializable {
         if (parameters == null) parameters = [:]
         if (!getInstance() || parameters.customDefaults || parameters.customDefaultsFromFiles) {
             List customDefaultFiles = []
-            if (steps.fileExists('.pipeline/defaults.yaml')) {
+            if (fileExists('.pipeline/defaults.yaml')) {
                 customDefaultFiles.add('defaults.yaml')
             }
 
@@ -75,7 +75,7 @@ class DefaultValueCache implements Serializable {
         for (String configFileName : configFiles) {
             steps.echo "Loading configuration file '${configFileName}'"
             try {
-                Map configuration = steps.readYaml file: ".pipeline/$configFileName"
+                Map configuration = readYaml file: ".pipeline/$configFileName"
                 defaultValues = mergeIntoDefaults(defaultValues, configuration)
             } catch (Exception e) {
                 steps.error "Failed to parse custom defaults as YAML file. " +
