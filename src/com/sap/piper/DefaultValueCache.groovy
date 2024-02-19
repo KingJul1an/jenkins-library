@@ -58,7 +58,6 @@ class DefaultValueCache implements Serializable {
             // passed to piper-go. The library resource 'default_pipeline_environment.yml' shall
             // be excluded, since the go steps have their own in-built defaults in their yaml files.
             createInstance(defaultValues, customDefaultFiles)
-            echo "DEBUG333 (OS): ${defaultValues}"
         }
     }
 
@@ -75,7 +74,7 @@ class DefaultValueCache implements Serializable {
 
     private static Map addDefaultsFromFiles(Script steps, Map defaultValues, List configFiles) {
         for (String configFileName : configFiles) {
-            steps.echo "Loading configuration file '${configFileName}'"
+            echo "Loading configuration file '${configFileName}'"
             try {
                 Map configuration = steps.readYaml file: ".pipeline/$configFileName"
                 defaultValues = mergeIntoDefaults(defaultValues, configuration)
