@@ -40,24 +40,21 @@ class DefaultValueCache implements Serializable {
     static void prepare(Script steps, Map parameters = [:]) {
         if (parameters == null) parameters = [:]
         if (!getInstance() || parameters.customDefaults || parameters.customDefaultsFromFiles) {
-            List customDefaultFiles = []
-
-//             if (steps.fileExists('.pipeline/defaults.yaml')) {
-//                 customDefaultFiles = ['defaults.yaml']
-//             }
-
-            customDefaultFiles = Utils.appendParameterToStringList(customDefaultFiles, parameters, 'customDefaults')
-            customDefaultFiles = Utils.appendParameterToStringList(customDefaultFiles, parameters, 'customDefaultsFromFiles')
+            List defaultsFromResources = ['default_pipeline_environment.yml']
+            List customDefaults = Utils.appendParameterToStringList(
+                [], parameters, 'customDefaults')
+            defaultsFromResources.addAll(customDefaults)
+            List defaultsFromFiles = Utils.appendParameterToStringList(
+                [], parameters, 'customDefaultsFromFiles')
 
             Map defaultValues = [:]
-            defaultValues = addDefaultsFromFiles(steps, defaultValues, ['default_pipeline_environment.yml'])
-            defaultValues = addDefaultsFromFiles(steps, defaultValues, customDefaultFiles)
+            defaultValues = addDefaultsFromLibraryResources(steps, defaultValues, defaultsFromResources)
+            defaultValues = addDefaultsFromFiles(steps, defaultValues, defaultsFromFiles)
 
             // The "customDefault" parameter is used for storing which extra defaults need to be
             // passed to piper-go. The library resource 'default_pipeline_environment.yml' shall
             // be excluded, since the go steps have their own in-built defaults in their yaml files.
-            createInstance(defaultValues, customDefaultFiles)
-//             steps.echo "DEBUG333 (OS): ${defaultValues}"
+            createInstance(defaultValues, customDefaults + defaultsFromFiles)
         }
     }
 
