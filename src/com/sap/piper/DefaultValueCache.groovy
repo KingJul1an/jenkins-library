@@ -40,7 +40,7 @@ class DefaultValueCache implements Serializable {
     static void prepare(Script steps, Map parameters = [:]) {
         if (parameters == null) parameters = [:]
         if (!getInstance() || parameters.customDefaults || parameters.customDefaultsFromFiles) {
-            def customDefaultFiles = [] as List
+            List customDefaultFiles = []
             if (steps.fileExists('.pipeline/defaults.yaml')) {
                 customDefaultFiles.add('defaults.yaml')
             }
@@ -48,9 +48,8 @@ class DefaultValueCache implements Serializable {
             customDefaultFiles = Utils.appendParameterToStringList(customDefaultFiles, parameters, 'customDefaults')
             customDefaultFiles = Utils.appendParameterToStringList(customDefaultFiles, parameters, 'customDefaultsFromFiles')
 
-            def defaultValues = [:]
-            def defaultFilesList = [] as List
-            defaultFilesList.add('default_pipeline_environment.yml')
+            Map defaultValues = [:]
+            List defaultFilesList = ['default_pipeline_environment.yml']
             defaultFilesList.addAll(customDefaultFiles)
             defaultValues = addDefaultsFromFiles(steps, defaultValues, defaultFilesList)
 
@@ -74,7 +73,7 @@ class DefaultValueCache implements Serializable {
 
     private static Map addDefaultsFromFiles(Script steps, Map defaultValues, List configFiles) {
         for (String configFileName : configFiles) {
-            echo "Loading configuration file '${configFileName}'"
+            steps.echo "Loading configuration file '${configFileName}'"
             try {
                 Map configuration = steps.readYaml file: ".pipeline/$configFileName"
                 defaultValues = mergeIntoDefaults(defaultValues, configuration)
