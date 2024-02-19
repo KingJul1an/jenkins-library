@@ -88,6 +88,8 @@ void call(Map parameters = [:]) {
         customDefaultsFiles = copyOrDownloadCustomDefaultsIntoPipelineEnv(script, customDefaultsFiles, customDefaultsCredentialsId)
 
         customDefaultsFiles.add('defaults.yaml')
+
+        script.sh "ls -la && ls -la .pipeline"
         prepareDefaultValues([
             script: script,
             customDefaults: parameters.customDefaults,
