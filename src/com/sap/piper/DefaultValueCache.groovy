@@ -41,8 +41,6 @@ class DefaultValueCache implements Serializable {
         if (parameters == null) parameters = [:]
         if (!getInstance() || parameters.customDefaults || parameters.customDefaultsFromFiles) {
             List defaultsFromResources = ['default_pipeline_environment.yml']
-            defaultsFromResources.add('defaults.yaml')
-
             List customDefaults = Utils.appendParameterToStringList(
                 [], parameters, 'customDefaults')
             defaultsFromResources.addAll(customDefaults)
@@ -50,7 +48,9 @@ class DefaultValueCache implements Serializable {
                 [], parameters, 'customDefaultsFromFiles')
 
             Map defaultValues = [:]
-            defaultValues = addDefaultsFromLibraryResources(steps, defaultValues, defaultsFromResources)
+            defaultValues = addDefaultsFromLibraryResources(steps, defaultValues, ['default_pipeline_environment.yml'])
+            defaultValues = addDefaultsFromFiles(steps, defaultValues, ['defaults.yaml'])
+            defaultValues = addDefaultsFromLibraryResources(steps, defaultValues, customDefaults)
             defaultValues = addDefaultsFromFiles(steps, defaultValues, defaultsFromFiles)
 
             // The "customDefault" parameter is used for storing which extra defaults need to be
