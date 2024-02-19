@@ -41,9 +41,9 @@ class DefaultValueCache implements Serializable {
         if (parameters == null) parameters = [:]
         if (!getInstance() || parameters.customDefaults || parameters.customDefaultsFromFiles) {
             def customDefaultFiles = [] as List
-            if (fileExists('.pipeline/defaults.yaml')) {
-                customDefaultFiles.add('defaults.yaml')
-            }
+//             if (steps.fileExists('.pipeline/defaults.yaml')) {
+//                 customDefaultFiles.add('defaults.yaml')
+//             }
 
             customDefaultFiles = Utils.appendParameterToStringList(customDefaultFiles, parameters, 'customDefaults')
             customDefaultFiles = Utils.appendParameterToStringList(customDefaultFiles, parameters, 'customDefaultsFromFiles')
@@ -56,7 +56,7 @@ class DefaultValueCache implements Serializable {
             // passed to piper-go. The library resource 'default_pipeline_environment.yml' shall
             // be excluded, since the go steps have their own in-built defaults in their yaml files.
             createInstance(defaultValues, customDefaultFiles)
-            echo "DEBUG333 (OS): ${defaultValues}"
+            steps.echo "DEBUG333 (OS): ${defaultValues}"
         }
     }
 
