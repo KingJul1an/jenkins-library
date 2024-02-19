@@ -77,6 +77,7 @@ void call(Map parameters = [:]) {
             writeFile file: ".pipeline/extension_configuration.yml", text: readFile(file: extensionConfigurationFilePath)
             DebugReport.instance.globalExtensionConfigurationFilePath = extensionConfigurationFilePath
 
+            echo "FAILING IN PIPERLOADGLOBAL"
             prepareDefaultValues([
                 script: script,
                 customDefaults: parameters.customDefaults,

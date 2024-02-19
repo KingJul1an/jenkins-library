@@ -87,6 +87,7 @@ void call(Map parameters = [:]) {
         String customDefaultsCredentialsId = script.commonPipelineEnvironment.configuration.general?.customDefaultsCredentialsId
         customDefaultsFiles = copyOrDownloadCustomDefaultsIntoPipelineEnv(script, customDefaultsFiles, customDefaultsCredentialsId)
 
+        echo "FAILING IN SETUPCOMMONPIPELINE"
         prepareDefaultValues([
             script: script,
             customDefaults: parameters.customDefaults,
