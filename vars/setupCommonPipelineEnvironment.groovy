@@ -86,10 +86,17 @@ void call(Map parameters = [:]) {
         }
         String customDefaultsCredentialsId = script.commonPipelineEnvironment.configuration.general?.customDefaultsCredentialsId
         customDefaultsFiles = copyOrDownloadCustomDefaultsIntoPipelineEnv(script, customDefaultsFiles, customDefaultsCredentialsId)
+
+        def testDefaults = ''
+        if (fileExists('.pipeline/defaults.yaml')) {
+            testDefaults = 'defaults.yaml'
+        }
+
         customDefaultsFiles.add('defaults.yaml')
         prepareDefaultValues([
             script: script,
             customDefaults: parameters.customDefaults,
+            testDefaults: testDefaults,
             customDefaultsFromFiles: customDefaultsFiles ])
 
         piperLoadGlobalExtensions script: script, customDefaults: parameters.customDefaults, customDefaultsFromFiles: customDefaultsFiles

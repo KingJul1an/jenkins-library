@@ -41,6 +41,11 @@ class DefaultValueCache implements Serializable {
         if (parameters == null) parameters = [:]
         if (!getInstance() || parameters.customDefaults || parameters.customDefaultsFromFiles) {
             List defaultsFromResources = ['default_pipeline_environment.yml']
+            if (parameters.testDefaults.length != 0) {
+                echo "test defaults ${testDefaults}"
+                defaultsFromResources.add(parameters.testDefaults)
+            }
+
             List customDefaults = Utils.appendParameterToStringList(
                 [], parameters, 'customDefaults')
             defaultsFromResources.addAll(customDefaults)
