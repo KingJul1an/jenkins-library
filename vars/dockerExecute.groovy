@@ -237,6 +237,7 @@ void call(Map parameters = [:], body) {
                 def image = docker.image(config.dockerImage)
                 pullWrapper(config.dockerPullImage, image, config.dockerRegistryUrl, config.dockerRegistryCredentialsId) {
                     if (!config.sidecarImage) {
+                        echo "[DEBUG_TEMP] config.dockerEnvVars: ${config.dockerEnvVars}"
                         image.inside(getDockerOptions(config.dockerEnvVars, config.dockerVolumeBind, config.dockerOptions)) {
                             body()
                         }
